@@ -7,8 +7,6 @@ package proxmoxtf
 import (
 	"errors"
 	"fmt"
-	"log"
-	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -1134,16 +1132,16 @@ func resourceVirtualEnvironmentVMCreateClone(d *schema.ResourceData, m interface
 
 	if len(cdrom) > 0 || len(initialization) > 0 {
 		ideDevices = proxmox.CustomStorageDevices{
-			proxmox.CustomStorageDevice{
+			"ide0": proxmox.CustomStorageDevice{
 				Enabled: false,
 			},
-			proxmox.CustomStorageDevice{
+			"ide1": proxmox.CustomStorageDevice{
 				Enabled: false,
 			},
-			proxmox.CustomStorageDevice{
+			"ide2": proxmox.CustomStorageDevice{
 				Enabled: false,
 			},
-			proxmox.CustomStorageDevice{
+			"ide3": proxmox.CustomStorageDevice{
 				Enabled: false,
 			},
 		}
@@ -1161,9 +1159,8 @@ func resourceVirtualEnvironmentVMCreateClone(d *schema.ResourceData, m interface
 
 		cdromMedia := "cdrom"
 
-
 		updateBody.IDEDevices = proxmox.CustomStorageDevices{
-			"ide2": proxmox.CustomStorageDevice{
+			"ide3": proxmox.CustomStorageDevice{
 				Enabled:    cdromEnabled,
 				FileVolume: cdromFileID,
 				Media:      &cdromMedia,
@@ -1215,7 +1212,7 @@ func resourceVirtualEnvironmentVMCreateClone(d *schema.ResourceData, m interface
 		cdromCloudInitMedia := "cdrom"
 
 		updateBody.IDEDevices = proxmox.CustomStorageDevices{
-			"ide1": proxmox.CustomStorageDevice{
+			"ide2": proxmox.CustomStorageDevice{
 				Enabled:    cdromCloudInitEnabled,
 				FileVolume: cdromCloudInitFileID,
 				Media:      &cdromCloudInitMedia,
@@ -3119,7 +3116,7 @@ func resourceVirtualEnvironmentVMUpdate(d *schema.ResourceData, m interface{}) e
 			"ide2": proxmox.CustomStorageDevice{
 				Enabled: false,
 			},
-			proxmox.CustomStorageDevice{
+			"ide3": proxmox.CustomStorageDevice{
 				Enabled: false,
 			},
 		},
@@ -3238,11 +3235,7 @@ func resourceVirtualEnvironmentVMUpdate(d *schema.ResourceData, m interface{}) e
 
 		cdromMedia := "cdrom"
 
-<<<<<<< HEAD
-		updateBody.IDEDevices[3] = proxmox.CustomStorageDevice{
-=======
-		updateBody.IDEDevices["ide2"] = proxmox.CustomStorageDevice{
->>>>>>> Add multidisk support
+		updateBody.IDEDevices["ide3"] = proxmox.CustomStorageDevice{
 			Enabled:    cdromEnabled,
 			FileVolume: cdromFileID,
 			Media:      &cdromMedia,
